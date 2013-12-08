@@ -1,0 +1,3 @@
+<?php
+
+namespace Blog\Controller;
