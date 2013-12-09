@@ -30,7 +30,7 @@ class PageController extends \Burrito\Framework\Controller {
 
     function listAction(){
         $schema = include(ROOT.'\app\config\schema.php');
-        $entityManager = new EntityManager(new \PDO("mysql:dbname=framework", "admin", "admin"), $schema);
+        $entityManager = new EntityManager(new \PDO("mysql:dbname=framework", "admin", "admin", array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'')), $schema);
 
         $posts = $entityManager->findAll('\\Blog\\Entity\\Post');
         foreach($posts as $post){
@@ -49,7 +49,7 @@ class PageController extends \Burrito\Framework\Controller {
 
     function detailAction($id){
         $schema = include(ROOT.'\app\config\schema.php');
-        $entityManager = new EntityManager(new \PDO("mysql:dbname=framework", "admin", "admin"), $schema);
+        $entityManager = new EntityManager(new \PDO("mysql:dbname=framework", "admin", "admin", array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'')), $schema);
 
         $post = $entityManager->findOne('\\Blog\\Entity\\Post', array('id' => $id));
         $context['post'] = $post;

@@ -231,7 +231,7 @@ class EntityManager {
 
     public function save($entity){
         $containerReflection = new \ReflectionClass($entity);
-        $containerName = '\\' . $entity->getName();
+        $containerName = '\\' . $containerReflection->getName();
 
         $config = $this->schema[$containerName];
         $columns = $config['columns'];
@@ -239,17 +239,23 @@ class EntityManager {
         $params = array();
 
         array_walk( $columns,
-            function( $value, $column ) use ( &$params ) {
-                $params[':'.$column] = $value;
+            function( $value, $column ) use ( &$params, $entity ) {
+                $getter = "get" . ucfirst($column);
+                $params[':'.$column] = $entity->$getter();
             } );
 
-        $stmt = $this->pdo->prepare( 'INSERT INTO `posts` (`'
+        $sql = 'INSERT INTO `posts` (`'
             . implode( '`, `', array_keys($columns) ).'`) VALUES (:'
-            . implode( ',:', array_keys($columns) ).')' );
+            . implode( ',:', array_keys($columns) ).')';
+
+        var_dump($sql);
+
+        $stmt = $this->pdo->prepare( $sql );
 
         if( count( $params ) > 0 ){
             foreach( $params as $column => $value ){
                 $stmt->bindValue( $column, $value );
+                var_dump($value);
             }
         }
 

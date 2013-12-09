@@ -32,7 +32,7 @@ class Application{
         };
         $serviceContainer['entityManager'] = function(){
             $schema = include(ROOT.'\app\config\schema.php');
-            $entityManager = new EntityManager(new \PDO("mysql:dbname=framework", "admin", "admin"), $schema);
+            $entityManager = new EntityManager(new \PDO("mysql:dbname=framework", "admin", "admin", array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'')), $schema);
             return $entityManager;
         };
 
